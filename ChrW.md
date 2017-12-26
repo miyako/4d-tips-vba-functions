@@ -1,3 +1,5 @@
+VBA on Mac does not fully support Unicode. 
+The [ChrW](https://msdn.microsoft.com/en-us/library/office/gg264465(v=office.14).aspx) function only returns codes for characters that are available in the current locale, ``MacJapanese`` for example. 
 
 | Code | Character |
 | ------------- | ------------- |
