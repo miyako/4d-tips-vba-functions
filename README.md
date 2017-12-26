@@ -14,7 +14,7 @@ End Function
 ' (c) Tim Hall - https://github.com/VBA-tools/VBA-Web
 
 'Modification:
-'UTF-8 support for 2 and 3 byte sequences (BMP)
+' UTF-8 support for 2 and 3 byte sequences (BMP)
 
 ''
 ' Encode string for URLs
