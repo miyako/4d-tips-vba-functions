@@ -8,8 +8,14 @@ Public Function AscU(char As String) As Long
 End Function
 ```
 
-```
-'Added UTF-8 support for 2 and 3 byte sequences (BMP)
+```vba
+'Based on:
+' WebHelpers v4.1.3
+' (c) Tim Hall - https://github.com/VBA-tools/VBA-Web
+
+'Modification:
+'UTF-8 support for 2 and 3 byte sequences (BMP)
+
 ''
 ' Encode string for URLs
 '
