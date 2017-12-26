@@ -200,3 +200,85 @@ Public Function UrlEncode(text As Variant, _
     End If
 End Function
 ```
+
+```vba
+'Based on:
+' WebHelpers v4.1.3
+' (c) Tim Hall - https://github.com/VBA-tools/VBA-Web
+
+'Modification:
+' UTF-8 support for 2 and 3 byte sequences (BMP)
+
+''
+' Decode Url-encoded string.
+'
+' @method UrlDecode
+' @param {String} Encoded Text to decode
+' @param {Boolean} [PlusAsSpace = True] Decode plus as space
+'   DEPRECATED Use EncodingMode:=FormUrlEncoding Or QueryUrlEncoding
+' @param {UrlEncodingMode} [EncodingMode = StrictUrlEncoding]
+' @return {String} Decoded string
+''
+Public Function UrlDecode(Encoded As String, _
+    Optional PlusAsSpace As Boolean = True, _
+    Optional EncodingMode As UrlEncodingMode = UrlEncodingMode.StrictUrlEncoding) As String
+
+    Dim web_StringLen As Long
+    web_StringLen = VBA.Len(Encoded)
+
+    If web_StringLen > 0 Then
+        Dim web_i As Long
+        Dim web_Result As String
+        Dim web_Temp As String
+        Dim web_Code As Long
+        Dim b1 As Long
+        Dim b2 As Long
+        Dim b3 As Long
+
+        For web_i = 1 To web_StringLen
+            web_Temp = VBA.Mid$(Encoded, web_i, 1)
+
+            If web_Temp = "+" And _
+                (PlusAsSpace _
+                 Or EncodingMode = UrlEncodingMode.FormUrlEncoding _
+                 Or EncodingMode = UrlEncodingMode.QueryUrlEncoding) Then
+
+                web_Temp = " "
+            ElseIf web_Temp = "%" And web_StringLen >= web_i + 2 Then
+                web_Temp = VBA.Mid$(Encoded, web_i + 1, 2)
+                web_Code = VBA.CInt("&H" & web_Temp)
+                If web_Code <= &H7F Then
+                web_Temp = VBA.ChrW(web_Code)
+                web_i = web_i + 2
+                ElseIf web_Code >= &HE0 And web_Code <= &HF00 Then
+                  '3 bytes
+                  If web_StringLen >= web_i + 8 Then
+                    b1 = (web_Code Mod &HE0) * &H1000
+                    web_Code = VBA.CInt("&H" & VBA.Mid$(Encoded, web_i + 4, 2))
+                    b2 = (web_Code Mod &H80) * &H40
+                    b3 = VBA.CInt("&H" & VBA.Mid$(Encoded, web_i + 7, 2))
+                    b3 = b3 And &H3F
+                    web_Temp = VBA.ChrW(b1 + b2 + b3)
+                    web_i = web_i + 8
+                  Else
+                    web_i = web_StringLen
+                  End If
+                ElseIf web_Code >= &H7F And web_Code <= &HE0 Then
+                  '2 bytes
+                  If web_StringLen >= web_i + 5 Then
+                    b1 = (web_Code Mod &HC0) * &H40
+                    b2 = VBA.CInt("&H" & VBA.Mid$(Encoded, web_i + 4, 2))
+                    b2 = b2 And &H3F
+                    web_Temp = VBA.ChrW(b1 + b2)
+                    web_i = web_i + 5
+                  Else
+                    web_i = web_StringLen
+                  End If
+                End If
+            End If
+            web_Result = web_Result & web_Temp
+        Next web_i
+        UrlDecode = web_Result
+    End If
+End Function
+```
