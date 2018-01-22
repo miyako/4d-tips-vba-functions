@@ -7,7 +7,7 @@ Helper functions for Unicode support in VBA
 ' in Function PrepareCurlRequest
 ' add --silent
 
-	web_Curl = "curl --silent -i"
+    web_Curl = "curl --silent -i"
   
 ' don't care to pipe iconv because VBA is not unicode anyway...
 ```
