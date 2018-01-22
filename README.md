@@ -2,6 +2,20 @@
 Helper functions for Unicode support in VBA
 
 ```vba
+' in Function json_ParseString
+' because SJIS converts antislash to yen
+
+    ' Application.LanguageSettings not available on Mac?
+    ' https://msdn.microsoft.com/en-us/library/microsoft.office.interop.excel.applicationclass.languagesettings(v=office.14).aspx
+    Dim IsCountryCodeJapan As Boolean
+    IsCountryCodeJapan = (81 = Application.International(xlCountryCode))
+
+    If IsCountryCodeJapan And json_Char = "¥" Then
+        json_Char = "\"
+    End If
+```
+
+```vba
 'AscW returns signed integer, which can be negative for 0x8000 and above
 Public Function AscU(char As String) As Long
   AscU = VBA.CLng("&H0000" + (VBA.Hex(VBA.AscW(char))))
