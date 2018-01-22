@@ -1,6 +1,17 @@
 # 4d-tips-vba-functions
 Helper functions for Unicode support in VBA
 
+``WebClient``
+
+```vba
+' in Function PrepareCurlRequest
+' add --silent
+
+	web_Curl = "curl --silent -i"
+  
+' don't care to pipe iconv because VBA is not unicode anyway...
+```
+
 ``WebHelpers``
 
 ```vba
