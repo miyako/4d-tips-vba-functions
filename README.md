@@ -1,6 +1,8 @@
 # 4d-tips-vba-functions
 Helper functions for Unicode support in VBA
 
+**Note**: Decoding ``\unnnn`` on Mac is a challenge because ``CharW`` is just an alias for ``Char``; it interprets the code as ``ANSI``, not ``UNICODE``. Same with ``AscW`` and ``Asc``.
+
 ``WebClient``
 
 ```vba
