@@ -3,6 +3,38 @@ Helper functions for Unicode support in VBA
 
 **Note**: Server should return Unicode characters escaped in the ``\unnnn``, since VBA forcefully converts ``UTF-8`` (on Mac) to ``ANSI``.
 
+* Example in 4D
+
+```
+  //convert all extended characters with \unnnn
+  //some clients (VBA) don't like raw unichar in json...
+
+C_OBJECT($1)
+C_TEXT($0;$json)
+
+$json:=JSON Stringify($1)
+
+ARRAY LONGINT($pos;0)
+ARRAY LONGINT($len;0)
+
+C_LONGINT($i)
+
+$i:=1
+
+$resultJson:=""
+
+While (Match regex("([\\u0000-\\u007f]*)([\\u0080-\\uffff])";$json;$i;$pos;$len))
+	$before:=Substring($json;$pos{1};$len{1})
+	$char:=Substring($json;$pos{2};$len{2})
+	$code:="\\u"+Substring(String(Character code($char);"&x");3)
+	$resultJson:=$resultJson+$before+$code
+	$i:=$pos{2}+$len{2}
+End while 
+$resultJson:=$resultJson+Substring($json;$i)
+
+$0:=$resultJson
+```
+
 ``WebClient``
 
 ```vba
